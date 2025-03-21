@@ -32,6 +32,7 @@ import (
 	"time"
 
 	"github.com/blang/semver"
+	cnpgiPostgres "github.com/cloudnative-pg/cnpg-i/pkg/postgres"
 	"github.com/cloudnative-pg/machinery/pkg/env"
 	"github.com/cloudnative-pg/machinery/pkg/execlog"
 	"github.com/cloudnative-pg/machinery/pkg/fileutils"
@@ -383,7 +384,12 @@ func prepareConfigurationFiles(ctx context.Context, cluster apiv1.Cluster, destD
 	}
 
 	newInstance := postgres.Instance{PgData: destDir}
-	if _, err := newInstance.RefreshConfigurationFilesFromCluster(ctx, tmpCluster, false); err != nil {
+	if _, err := newInstance.RefreshConfigurationFilesFromCluster(
+		ctx,
+		tmpCluster,
+		false,
+		cnpgiPostgres.OperationType_TYPE_UPGRADE,
+	); err != nil {
 		return fmt.Errorf("error while creating the configuration files for new datadir %q: %w", destDir, err)
 	}
 
