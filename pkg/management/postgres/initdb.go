@@ -153,7 +153,9 @@ func (info InitInfo) EnsureTargetDirectoriesDoNotExist(ctx context.Context) erro
 	}
 
 	if !pgDataExists && !pgWalExists {
+		contextLogger.Info("Existing pgdata not found.")
 		return nil
+
 	}
 
 	out, err := info.GetInstance().GetPgControldata()
