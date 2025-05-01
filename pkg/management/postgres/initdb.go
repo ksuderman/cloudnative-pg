@@ -158,12 +158,15 @@ func (info InitInfo) EnsureTargetDirectoriesDoNotExist(ctx context.Context) erro
 
 	out, err := info.GetInstance().GetPgControldata()
 	if err == nil {
+		contextLogger.Info("Found existing data directory with valid data")
 		// Found and existing data directory with valid data.
 		// Check if the recovery source is set to "existingDirectory"
 		client, err := management.NewControllerRuntimeClient()
 		if err == nil {
+			contextLogger.Info("Created a new client.")
 			cluster, err := info.loadCluster(ctx, client)
 			if err == nil {
+				contextLogger.Info("Loaded the cluster.")
 				if cluster.Spec.Bootstrap != nil &&
 					cluster.Spec.Bootstrap.Recovery != nil &&
 					cluster.Spec.Bootstrap.Recovery.Source == "existingDirectory" {
