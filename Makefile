@@ -18,7 +18,8 @@
 #
 
 # Image URL to use all building/pushing image targets
-IMAGE_NAME ?= ghcr.io/cloudnative-pg/cloudnative-pg-testing
+#IMAGE_NAME ?= ghcr.io/cloudnative-pg/cloudnative-pg-testing
+IMAGE_NAME ?= ksuderman/cloudnative-pg-testing
 
 # Prevent e2e tests to proceed with empty tag which
 # will be considered as "latest".

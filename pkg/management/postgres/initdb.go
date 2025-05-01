@@ -158,7 +158,21 @@ func (info InitInfo) EnsureTargetDirectoriesDoNotExist(ctx context.Context) erro
 
 	out, err := info.GetInstance().GetPgControldata()
 	if err == nil {
-		contextLogger.Info("pg_controldata check on existing directory succeeded, renaming the folders", "out", out)
+		// Found and existing data directory with valid data.
+		// Check if the recovery source is set to "existingDirectory"
+		client, err := management.NewControllerRuntimeClient()
+		if err == nil {
+			cluster, err := info.loadCluster(ctx, client)
+			if err == nil {
+				if cluster.Spec.Bootstrap != nil &&
+					cluster.Spec.Bootstrap.Recovery != nil &&
+					cluster.Spec.Bootstrap.Recovery.Source == "existingDirectory" {
+					contextLogger.Info("Reusing existing data and WAL directories as per recovery source configuration")
+					return nil
+				}
+			}
+		}
+		contextLogger.Info("pg_controldata check on existing directory succeeded and recovery not configured, renaming the folders", "out", out)
 		return info.renameExistingTargetDataDirectories(ctx, pgWalExists)
 	}
 
@@ -446,6 +460,11 @@ func (info InitInfo) Bootstrap(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
+	if cluster.Annotations == nil {
+		cluster.Annotations = make(map[string]string)
+	}
+	cluster.Annotations["gxy.io/test"] = "this-is-a-test"
 
 	coredumpFilter := cluster.GetCoredumpFilter()
 	if err := system.SetCoredumpFilter(coredumpFilter); err != nil {
