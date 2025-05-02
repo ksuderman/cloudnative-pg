@@ -137,7 +137,7 @@ type InitInfo struct {
 //     data directory that may exist in the PersistentVolumes (PVs).
 func (info InitInfo) EnsureTargetDirectoriesDoNotExist(ctx context.Context) error {
 	contextLogger := log.FromContext(ctx).WithValues("pgdata", info.PgData)
-
+	contextLogger.Warning("WTF - Ensuring target directory")
 	pgDataExists, err := fileutils.FileExists(info.PgData)
 	if err != nil {
 		contextLogger.Error(err, "Error while checking for an existing data directory")

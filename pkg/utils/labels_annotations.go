@@ -314,6 +314,7 @@ func LabelClusterName(object *metav1.ObjectMeta, name string) {
 	}
 
 	object.Labels[ClusterLabelName] = name
+	object.Labels["gxy.io/labelClusterName"] = "success"
 }
 
 // SetOperatorVersion set inside a certain object metadata the annotation
