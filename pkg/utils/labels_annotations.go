@@ -36,6 +36,7 @@ const MetadataNamespace = "cnpg.io"
 // When you add a new label or annotation, please make sure that you also update the
 // publicly visible documentation, namely the `docs/src/labels_annotations.md` file
 const (
+	GalaxyLabelName = MetadataNamespace + "/galaxy"
 	// ClusterLabelName is the name of the label cluster which the backup CR belongs to
 	ClusterLabelName = MetadataNamespace + "/cluster"
 
@@ -314,7 +315,7 @@ func LabelClusterName(object *metav1.ObjectMeta, name string) {
 	}
 
 	object.Labels[ClusterLabelName] = name
-	object.Labels["gxy.io/labelClusterName"] = "success"
+	object.Labels[GalaxyLabelName] = "success"
 }
 
 // SetOperatorVersion set inside a certain object metadata the annotation

@@ -466,10 +466,10 @@ func (info InitInfo) Bootstrap(ctx context.Context) error {
 		return err
 	}
 
-	if cluster.Annotations == nil {
-		cluster.Annotations = make(map[string]string)
-	}
-	cluster.Annotations["gxy.io/test"] = "this-is-a-test"
+	//if cluster.Annotations == nil {
+	//	cluster.Annotations = make(map[string]string)
+	//}
+	//cluster.Annotations["gxy.io/test"] = "this-is-a-test"
 
 	coredumpFilter := cluster.GetCoredumpFilter()
 	if err := system.SetCoredumpFilter(coredumpFilter); err != nil {
