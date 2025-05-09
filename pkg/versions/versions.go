@@ -23,7 +23,7 @@ package versions
 
 const (
 	// Version is the version of the operator
-	Version = "1.25.1"
+	Version = "1.25.2"
 
 	// DefaultImageName is the default image used by the operator to create pods
 	DefaultImageName = "ghcr.io/cloudnative-pg/postgresql:17.4"
@@ -39,7 +39,7 @@ type BuildInfo struct {
 
 var (
 	// buildVersion injected during the build
-	buildVersion = "1.25.1"
+	buildVersion = "1.25.2"
 
 	// buildCommit injected during the build
 	buildCommit = "none"
