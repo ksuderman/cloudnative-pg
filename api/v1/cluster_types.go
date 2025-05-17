@@ -1491,6 +1491,15 @@ type BootstrapInitDB struct {
 	// +optional
 	Database string `json:"database,omitempty"`
 
+	// Use an existing PGDATA directory if it exists and contains a valid PostgreSQL
+	// database. If set to `true`, the operator will not run rename the existing
+	// directory, but will use it as is. This is useful when the user wants to recover
+	// from a previous installation of PostgreSQL.  This option should be used with
+	// caution and is only intended for advanced users. You almost never want to use
+	// this unless you have a very well-defined reason to do so.
+	// +optional
+	ReuseExistingDirectory bool `json:"reuseExistingDirectory,omitempty"`
+
 	// Name of the owner of the database in the instance to be used
 	// by applications. Defaults to the value of the `database` key.
 	// +optional

@@ -158,10 +158,21 @@ func (info InitInfo) EnsureTargetDirectoriesDoNotExist(ctx context.Context) erro
 
 	out, err := info.GetInstance().GetPgControldata()
 	if err == nil {
-		//contextLogger.Info("pg_controldata check on existing directory succeeded, renaming the folders", "out", out)
-		//return info.renameExistingTargetDataDirectories(ctx, pgWalExists)
-		contextLogger.Info("Reusing an existing valid pgdata directory")
-		return nil
+		typedClient, err := management.NewControllerRuntimeClient()
+		if err == nil {
+			return err
+		}
+		cluster, err := info.loadCluster(ctx, typedClient)
+		if err != nil {
+			return err
+		}
+		if cluster.Spec.Bootstrap.InitDB.ReuseExistingDirectory {
+			// If the user specified an existing directory, we will reuse it.
+			contextLogger.Info("Reusing an existing PGDATA directory.")
+			return nil
+		}
+		contextLogger.Info("pg_controldata check on existing directory succeeded, renaming the folders", "out", out)
+		return info.renameExistingTargetDataDirectories(ctx, pgWalExists)
 	}
 
 	contextLogger.Info("pg_controldata check on existing directory failed, cleaning up folders", "err", err, "out", out)
@@ -220,12 +231,7 @@ func (info InitInfo) renameExistingTargetDataDirectories(ctx context.Context, pg
 
 // CreateDataDirectory creates a new data directory given the configuration
 func (info InitInfo) CreateDataDirectory() error {
-	exists, e := fileutils.FileExists(info.PgData)
-	if e != nil {
-		return e
-	}
-	if exists {
-		log.Warning("Data directory already exists. Refusing to create.")
+	if exists, _ := fileutils.FileExists(info.PgData); exists {
 		return nil
 	}
 	// Invoke initdb to generate a data directory
